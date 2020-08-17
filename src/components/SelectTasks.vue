@@ -1,17 +1,29 @@
 <template>
   <div class="hello">
-    <b-table :data="tasks" draggable>
+    <b-table
+      :data="tasks"
+      draggable
+      @dragstart="dragstart"
+      @drop="drop"
+      @dragover="dragover"
+      @dragleave="dragleave"
+    >
       <template slot-scope="props">
         <b-table-column field="name" label="Name">
           <a :href="props.row.link">{{ props.row.name }}</a>
         </b-table-column>
-        <b-table-column field="description" label="Description">{{ props.row.description }}</b-table-column>
+        <b-table-column field="description" label="Description">{{
+          props.row.description
+        }}</b-table-column>
         <b-table-column field="selected" label="Selected" width="40">
-          <b-icon
+          <!-- <b-icon
             :icon="props.row.selected ? 'checkbox-marked' : 'close-box'"
             :type="props.row.selected ? 'is-success' : 'is-danger'"
-          ></b-icon>
-          <!-- <b-checkbox v-model="props.row[1].selected"></b-checkbox> -->
+          ></b-icon>-->
+          <b-checkbox
+            v-model="props.row.selected"
+            @input="updateSelectedTasks(props.index, props.row)"
+          ></b-checkbox>
         </b-table-column>
       </template>
 
@@ -30,31 +42,47 @@
 </template>
 
 <script>
+let draggingRow = undefined;
+let draggingRowIndex = -1;
 export default {
   name: "SelectTasks",
   props: {
-    group: String,
+    group: String
   },
   computed: {
     selected() {
       return this.$store.state.taskGroups[this.$props.group].selected;
     },
     tasks() {
-      let tasks = [];
-      Object.entries(
-        this.$store.state.taskGroups[this.$props.group].tasks
-      ).forEach((task) => {
-        tasks.push({
-          name: task[0],
-          selected: task[1].selected,
-          description: task[1].description,
-          link: task[1].link,
-        });
-      });
-      return tasks;
-    },
+      return this.$store.state.taskGroups[this.$props.group].tasks;
+    }
   },
-  methods: {},
+  methods: {
+    updateSelectedTasks(index, task) {
+      task.index = index;
+      task.group = this.$props.group;
+      this.$store.commit("selectGroupTasks", task);
+    },
+    dragstart(payload) {
+      draggingRow = payload.row;
+      draggingRowIndex = payload.index;
+    },
+    dragover(payload) {
+      payload.event.preventDefault();
+    },
+    dragleave(payload) {
+      payload.event.preventDefault();
+    },
+    drop(payload) {
+      const droppedOnRowIndex = payload.index;
+      let d = {
+        group: this.$props.group,
+        start: draggingRowIndex,
+        end: droppedOnRowIndex
+      };
+      this.$store.commit("rearrangeTasks", d);
+    }
+  }
 };
 </script>
 

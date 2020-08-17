@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+const arrayMove = require("array-move");
 
 Vue.use(Vuex);
 
@@ -10,62 +11,70 @@ export default new Vuex.Store({
     taskGroups: {
       Timekeeping: {
         selected: false,
-        tasks: {
-          // available: [
-          //   {
-          //     name: "Add Paycode",
-          //     description: "Add a paycode to an employee's timecard.",
-          //     link:
-          //       "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Paycode_to_Timecard/index.html"
-          //   },
-          //   {
-          //     name: "Add Punch",
-          //     description: "Add a missed punch to an employee's timecard.",
-          //     link:
-          //       "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Punch_With_Comment/index.html"
-          //   }
-          // ],
-          // selected: {}
-          "Add Paycode": {
+        tasks: [
+          {
+            name: "Add Paycode",
             selected: false,
             description: "Add a paycode to an employee's timecard.",
             link:
               "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Paycode_to_Timecard/index.html"
           },
-          "Add Punch": {
+          {
+            name: "Add Punch",
             selected: false,
             description: "Add a missed punch to an employee's timecard.",
             link:
               "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Punch_With_Comment/index.html"
           }
-        }
+        ]
       },
       Scheduling: {
         selected: false,
-        tasks: {}
+        tasks: [
+          {
+            name: "Assign Open Shift",
+            selected: false,
+            description:
+              "Assign an open shift to an employee by adding the shift to their schedule.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Scheduling_Exercise_Page/Assign_Open_Shifts/index.html"
+          },
+          {
+            name: "Manage Time Off",
+            selected: false,
+            description: "Identify, access, and respond to time-off requests.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Scheduling_Exercise_Page/Manage_Time_off_Requests/index.html"
+          },
+          {
+            name: "Modify Scheduled Shifts",
+            selected: false,
+            description: "Add, Edit, and Delete Scheduled Shifts",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Edit_Delete_Shifts/index.html"
+          }
+        ]
       },
       HR: {
         selected: false,
-        tasks: {}
+        tasks: [
+          {
+            name: "Add Paycode",
+            selected: false,
+            description: "Add a paycode to an employee's timecard.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Paycode_to_Timecard/index.html"
+          },
+          {
+            name: "Add Punch",
+            selected: false,
+            description: "Add a missed punch to an employee's timecard.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Punch_With_Comment/index.html"
+          }
+        ]
       }
     }
-    // taskGroups: [
-    //   {
-    //     name: "Timekeeping",
-    //     selected: true,
-    //     tasks: {}
-    //   },
-    //   {
-    //     name: "Scheduling",
-    //     selected: false,
-    //     tasks: {}
-    //   },
-    //   {
-    //     name: "HR",
-    //     selected: false,
-    //     tasks: {}
-    //   }
-    // ]
   },
   mutations: {
     setPage: (state, n) => {
@@ -86,15 +95,31 @@ export default new Vuex.Store({
       }
     },
     selectTaskGroup: (state, payload) => {
-      if (payload.taskGroup == "Timekeeping") {
+      if (payload.name == "Timekeeping") {
         state.taskGroups.Timekeeping.selected = payload.selected;
-      } else if (payload.taskGroup == "Scheduling") {
+      } else if (payload.name == "Scheduling") {
         state.taskGroups.Scheduling.selected = payload.selected;
-      } else if (payload.taskGroup == "HR") {
+      } else if (payload.name == "HR") {
         state.taskGroups.HR.selected = payload.selected;
       } else {
-        console.log("Error: Unknown task group " + payload.taskGroup);
+        console.log("Error: Unknown task group " + payload.name);
       }
+    },
+    selectGroupTasks: (state, payload) => {
+      console.log(payload);
+      if (payload.group == "Timekeeping") {
+        state.taskGroups.Timekeeping.tasks[payload.index].selected = payload.selected;
+      } else if (payload.group == "Scheduling") {
+        state.taskGroups.Scheduling.tasks[payload.index].selected = payload.selected;
+      } else if (payload.group == "HR") {
+        state.taskGroups.HR.tasks[payload.index].selected = payload.selected;
+      } else {
+        console.log("Error: Unknown task " + payload.name + " for Task Group: " + payload.group);
+      }
+    },
+    rearrangeTasks: (state, payload) => {
+      let tasks = state.taskGroups[payload.group].tasks;
+      state.taskGroups[payload.group].tasks = arrayMove(tasks, payload.start, payload.end);
     }
   },
   actions: {},
