@@ -59,6 +59,14 @@ export default {
   },
   methods: {
     updateSelectedTasks(index, task) {
+      if (!this.$store.state.taskGroups[this.$props.group].selected && task.selected) {
+        this.$buefy.toast.open({
+          duration: 3000,
+          message: `<b>${this.$props.group}</b> isn't selected, selecting <b>${task.name}</b> won't do anything.`,
+          position: "is-bottom",
+          type: "is-danger"
+        });
+      }
       task.index = index;
       task.group = this.$props.group;
       this.$store.commit("selectGroupTasks", task);
