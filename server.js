@@ -1,7 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
-var exec = require("child_process").exec;
+const spawn = require("cross-spawn");
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -37,6 +37,16 @@ function createSite() {
   try {
     process.chdir("./template");
     console.log("New directory: " + process.cwd());
+    //TODO: Change copy to something else if on Linux.
+    const child = spawn("npm run generate && copy site.json ./dist/site.json");
+
+    child.stdout.on("data", data => {
+      console.log(`child stdout:\n${data}`);
+    });
+
+    child.stderr.on("data", data => {
+      console.log(`child stderr:\n${data}`);
+    });
   } catch (err) {
     console.log("chdir: " + err);
   }
