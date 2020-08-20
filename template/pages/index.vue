@@ -1,5 +1,5 @@
 <template>
-  <h1>Welcome {{role}} of {{company}}!!</h1>
+  <h1>Select a task group to begin!!</h1>
 </template>
 
 <script>

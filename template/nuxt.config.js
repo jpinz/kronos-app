@@ -1,3 +1,8 @@
 export default {
-  target: "static" // default: 'server'
+  components: true,
+  target: "static", // default: 'server'
+  modules: [
+    // Simple usage
+    "nuxt-buefy"
+  ]
 };
