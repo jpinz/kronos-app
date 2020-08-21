@@ -16,42 +16,16 @@ export default {
   },
   computed: mapState({
     role: (state) => state.role,
-    taskGroups: (state) => JSON.parse(JSON.stringify(state.taskGroups)),
+    taskGroups: (state) => state.taskGroups,
   }),
   methods: {
     download() {
-      let tg = {};
-      Object.keys(this.taskGroups).forEach((group, index) => {
-        if (this.taskGroups[group].selected) {
-          let taskG = this.taskGroups[group];
-          let tasks = taskG.tasks;
-          delete taskG.selected;
-          tasks.forEach((task, index) => {
-            console.log(task);
-            if (task.selected) {
-              delete task.selected;
-              delete task.index;
-              delete task.group;
-            } else {
-              tasks.splice(index, 1);
-            }
-          });
-          console.log(taskG);
-
-          tg[group] = taskG;
-        }
-        if (index == Object.keys(this.taskGroups).length - 1) {
-          console.log(tg);
-          this.sendData(tg);
-        }
-      });
-    },
-    sendData(taskGroups) {
+      console.log(this.taskGroups);
       console.log("downloading...");
       this.axios
         .post("http://localhost:3001/download", {
           role: this.role,
-          taskGroups: taskGroups,
+          taskGroups: this.taskGroups,
         })
 
         .then(function (response) {

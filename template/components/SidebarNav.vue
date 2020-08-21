@@ -13,7 +13,13 @@ export default {
   },
   computed: {
     taskGroups: () => {
-      return Object.keys(data.taskGroups);
+      let groups = [];
+      Object.keys(data.taskGroups).forEach((group) => {
+        if (data.taskGroups[group].selected) {
+          groups.push(group);
+        }
+      });
+      return groups;
     },
   },
 };
