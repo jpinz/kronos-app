@@ -1,12 +1,14 @@
 <template>
   <div class="columns">
     <div class="column is-one-quarter">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">{{company}}</h1>
-          <h2 class="subtitle">{{role}}</h2>
+      <section class="hero is-bold">
+        <div class="hero-body">
+          <div class="container has-text-centered">
+            <h1 class="title">{{role}}</h1>
+            <h2 class="subtitle">{{company}}</h2>
+          </div>
         </div>
-      </div>
+      </section>
       <SidebarNav />
     </div>
     <div class="column">
