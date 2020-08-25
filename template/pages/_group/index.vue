@@ -3,40 +3,43 @@
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container has-text-centered">
-          <h1 class="title">
-            {{ group }}
-          </h1>
+          <h1 class="title">{{ group }}</h1>
         </div>
       </div>
     </section>
 
-    <!-- <div v-for="task in tasks" :key="task">
-      <div class="tile">
-        <p>{{ task }}</p>
-      </div>
-    </div> -->
-    <div class="tile is-ancestor">
-      <div class="tile is-horizontal" v-bind:class="gridSize(tasks)">
-        <div v-for="task in tasks" :key="task">
-          <div class="tile is-child">
-            <p>{{ task }}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+    <br />
+    <ul :style="gridStyle" class="card-list">
+      <li v-for="task in tasks" class="card-item" :key="task">
+        <TaskCard v-bind:task="task" />
+      </li>
+    </ul>
   </div>
 </template>
 
 <script>
 import data from "../../site.json";
+import TaskCard from "@/components/TaskCard.vue";
 
 export default {
   name: "Group",
+  components: {
+    TaskCard
+  },
   data() {
     return {
-      group: this.$route.params.group,
-      tasks: data.taskGroups[this.$route.params.group].tasks
+      group: this.$route.params.group
     };
+  },
+  computed: {
+    tasks() {
+      return data.taskGroups[this.$route.params.group].tasks.filter(task => task.selected);
+    },
+    gridStyle() {
+      return {
+        gridTemplateColumns: `repeat(3, minmax(100px, 1fr))`
+      };
+    }
   },
   methods: {
     gridSize(tasks) {
@@ -56,3 +59,10 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.card-list {
+  display: grid;
+  grid-gap: 1em;
+}
+</style>

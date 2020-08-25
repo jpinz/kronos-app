@@ -1,10 +1,15 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
-const spawn = require("cross-spawn");
+const spawn = require("cross-spawn-promise");
+const archiver = require("archiver");
+const zip = require("express-easy-zip");
+const path = require("path");
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+app.use(zip());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,8 +24,21 @@ app.post("/download", (req, res) => {
   console.log("taskGroups = " + JSON.stringify(taskGroups));
   try {
     fs.writeFileSync("./template/site.json", JSON.stringify(req.body));
-    createSite();
-    res.end("Site created");
+    createSite().then(state => {
+      console.log("website created " + state);
+      // res.set({
+      //   "Content-Type": "application/zip",
+      //   "Content-Disposition": 'attachment; filename="site.zip"'
+      // });
+      // res.download("./site.zip");
+      res.zip({
+        files: [
+          // { path: path.join(__dirname, './file'), name: 'any/path/to/file' }, //can be a file
+          { path: path.join(__dirname, "./template/dist/"), name: "site" } //or a folder
+        ],
+        filename: "site.zip"
+      });
+    });
   } catch (err) {
     console.error(err);
     res.error("Error when creating file");
@@ -33,21 +51,73 @@ app.get("*", (req, res) => {
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
 
-function createSite() {
+async function createSite() {
   try {
     process.chdir("./template");
+    // var archive = archiver.create("zip", {});
+    // var output = fs.createWriteStream(__dirname + "/site.zip");
     console.log("New directory: " + process.cwd());
     //TODO: Change copy to something else if on Linux.
-    const child = spawn("npm run generate && copy site.json ./dist/site.json");
+    return spawn("npm", ["run", "build"])
+      .then(stdout => {
+        console.info("Successful site build!");
+        console.info("stdout:", stdout.toString());
+        return spawn("npm", ["run", "generate"])
+          .then(stdout => {
+            console.info("Success!");
+            console.info("stdout:", stdout.toString());
+            // copy site.json ./dist/site.json
+            return spawn("copy", ["site.json", "./dist/site.json"])
+              .then(stdout => {
+                console.info("Success!");
+                console.info("stdout:", stdout.toString());
+                // copy site.json ./dist/site.json
+                // archive.pipe(output);
 
-    child.stdout.on("data", data => {
-      console.log(`child stdout:\n${data}`);
-    });
-
-    child.stderr.on("data", data => {
-      console.log(`child stderr:\n${data}`);
-    });
+                // return archive.directory(__dirname + "/dist").finalize();
+                return true;
+              })
+              .catch(error => {
+                console.error("Failed!");
+                console.error("exit status:", error.exitStatus);
+                console.error("stderr:", error.stderr.toString());
+                return false;
+              });
+          })
+          .catch(error => {
+            console.error("Failed!");
+            console.error("exit status:", error.exitStatus);
+            console.error("stderr:", error.stderr.toString());
+            return false;
+          });
+      })
+      .catch(error => {
+        console.error("Failed!");
+        console.error("exit status:", error.exitStatus);
+        console.error("stderr:", error.stderr.toString());
+        return false;
+      });
   } catch (err) {
     console.log("chdir: " + err);
   }
+}
+
+/**
+ * @param {String} source
+ * @param {String} out
+ * @returns {Promise}
+ */
+function zipDirectory(source, out) {
+  const archive = archiver("zip", { zlib: { level: 9 } });
+  const stream = fs.createWriteStream(out);
+
+  return new Promise((resolve, reject) => {
+    archive
+      .directory(source, false)
+      .on("error", err => reject(err))
+      .pipe(stream);
+
+    stream.on("close", () => resolve());
+    archive.finalize();
+  });
 }

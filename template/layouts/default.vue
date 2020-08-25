@@ -1,6 +1,6 @@
 <template>
   <div class="columns">
-    <div class="column is-one-quarter">
+    <div class="column is-2 box" id="sidebar">
       <section class="hero is-bold">
         <div class="hero-body">
           <div class="container has-text-centered">
@@ -32,3 +32,9 @@ export default {
   computed: {},
 };
 </script>
+
+<style scoped>
+#sidebar {
+  height: 100vh;
+}
+</style>
