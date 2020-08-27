@@ -1,30 +1,39 @@
 <template>
   <div>
-    <section class="hero is-primary">
+    <!-- <section class="hero is-primary">
       <div class="hero-body">
         <div class="container has-text-centered">
           <h1 class="title">{{ group }}</h1>
         </div>
       </div>
-    </section>
+    </section> -->
 
+    <Title :title="group" />
     <br />
-    <ul :style="gridStyle" class="card-list">
-      <li v-for="task in tasks" class="card-item" :key="task">
+    <div v-if="tasks.length > 0" :class="gridStyle">
+      <div v-for="task in tasks" class="card-item" :key="task">
         <TaskCard v-bind:task="task" />
-      </li>
-    </ul>
+      </div>
+    </div>
+    <div v-else class="container">
+      <div class="notification">
+        <b-icon pack="fas" icon="frown" size="is-large"> </b-icon>
+        No selected <strong>tasks</strong> for this <strong>task group</strong>.
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import data from "../../site.json";
 import TaskCard from "@/components/TaskCard.vue";
+import Title from "@/components/Title.vue";
 
 export default {
   name: "Group",
   components: {
-    TaskCard
+    TaskCard,
+    Title
   },
   data() {
     return {
@@ -36,9 +45,7 @@ export default {
       return data.taskGroups[this.$route.params.group].tasks.filter(task => task.selected);
     },
     gridStyle() {
-      return {
-        gridTemplateColumns: `repeat(3, minmax(100px, 1fr))`
-      };
+      return `grid grid-cols-${this.gridSize(this.tasks)} gap-4`;
     }
   },
   methods: {
@@ -46,15 +53,15 @@ export default {
       let length = tasks.length;
       if (length == 1) {
         // One tile width
-        return "is-12";
+        return "1";
       } else if (length == 2) {
         // Two tile width
-        return "is-8";
+        return "2";
       } else if (length >= 3) {
         // Three tile width
-        return "is-4";
+        return "3";
       }
-      return "is-12";
+      return "1";
     }
   }
 };

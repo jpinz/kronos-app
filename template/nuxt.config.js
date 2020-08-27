@@ -5,5 +5,6 @@ export default {
   modules: [
     // Simple usage
     "nuxt-buefy"
-  ]
+  ],
+  buildModules: ["@nuxtjs/tailwindcss"]
 };
