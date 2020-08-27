@@ -2,7 +2,6 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const fs = require("fs");
 const spawn = require("cross-spawn-promise");
-const archiver = require("archiver");
 const zip = require("express-easy-zip");
 const path = require("path");
 
@@ -17,23 +16,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("./dist"));
 
 app.post("/download", (req, res) => {
-  var role = req.body.role;
-  var taskGroups = req.body.taskGroups;
-  req.body.company = "Contoso";
-  console.log("Role = " + role);
-  console.log("taskGroups = " + JSON.stringify(taskGroups));
   try {
     fs.writeFileSync("./template/site.json", JSON.stringify(req.body));
     createSite().then(state => {
       console.log("website created " + state);
-      // res.set({
-      //   "Content-Type": "application/zip",
-      //   "Content-Disposition": 'attachment; filename="site.zip"'
-      // });
-      // res.download("./site.zip");
+
       res.zip({
         files: [
-          // { path: path.join(__dirname, './file'), name: 'any/path/to/file' }, //can be a file
           { path: path.join(__dirname, "./template/dist/"), name: "site" } //or a folder
         ],
         filename: "site.zip"
@@ -71,10 +60,6 @@ async function createSite() {
               .then(stdout => {
                 console.info("Success!");
                 console.info("stdout:", stdout.toString());
-                // copy site.json ./dist/site.json
-                // archive.pipe(output);
-
-                // return archive.directory(__dirname + "/dist").finalize();
                 return true;
               })
               .catch(error => {
@@ -100,24 +85,4 @@ async function createSite() {
   } catch (err) {
     console.log("chdir: " + err);
   }
-}
-
-/**
- * @param {String} source
- * @param {String} out
- * @returns {Promise}
- */
-function zipDirectory(source, out) {
-  const archive = archiver("zip", { zlib: { level: 9 } });
-  const stream = fs.createWriteStream(out);
-
-  return new Promise((resolve, reject) => {
-    archive
-      .directory(source, false)
-      .on("error", err => reject(err))
-      .pipe(stream);
-
-    stream.on("close", () => resolve());
-    archive.finalize();
-  });
 }

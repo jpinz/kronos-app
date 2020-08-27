@@ -7,13 +7,16 @@
 
       <div class="column">
         <b-steps v-model="pageNumber">
-          <b-step-item step="1" label="Role Select">
+          <b-step-item step="1" label="Company Data">
+            <CompanySelect />
+          </b-step-item>
+          <b-step-item step="2" label="Role Select">
             <RoleSelect />
           </b-step-item>
-          <b-step-item step="2" label="Task & Group Select">
+          <b-step-item step="3" label="Task & Group Select">
             <GroupSelect />
           </b-step-item>
-          <b-step-item step="3" label="Done!">
+          <b-step-item step="4" label="Done!">
             <FinishPage />
           </b-step-item>
         </b-steps>
@@ -26,6 +29,7 @@
 // @ is an alias to /src
 import RoleSelect from "@/views/RoleSelect.vue";
 import GroupSelect from "@/views/GroupSelect.vue";
+import CompanySelect from "@/views/CompanySelect.vue";
 import FinishPage from "@/views/FinishPage.vue";
 import Sidebar from "@/components/Sidebar.vue";
 
@@ -35,7 +39,8 @@ export default {
     Sidebar,
     RoleSelect,
     GroupSelect,
-    FinishPage,
+    CompanySelect,
+    FinishPage
   },
   computed: {
     pageNumber: {
@@ -44,8 +49,8 @@ export default {
       },
       set(value) {
         this.$store.commit("setPage", value);
-      },
-    },
-  },
+      }
+    }
+  }
 };
 </script>

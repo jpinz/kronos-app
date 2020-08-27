@@ -6,8 +6,10 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    company: "Kronos",
     role: "Manager",
-    pageNumber: 0,
+    colorPrimary: {},
+    colorSecondary: {},
     taskGroups: {
       Timekeeping: {
         selected: false,
@@ -82,6 +84,15 @@ export default new Vuex.Store({
     },
     setRole: (state, r) => {
       state.role = r;
+    },
+    setCompany: (state, n) => {
+      state.company = n;
+    },
+    setColorPrimary: (state, c) => {
+      state.colorPrimary = c;
+    },
+    setColorSecondary: (state, c) => {
+      state.colorSecondary = c;
     },
     setTasks: (state, payload) => {
       if (payload.taskGroup == "Timekeeping") {
