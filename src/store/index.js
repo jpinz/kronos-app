@@ -75,6 +75,48 @@ export default new Vuex.Store({
               "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Add_Punch_With_Comment/index.html"
           }
         ]
+      },
+      "Cross-Suite": {
+        selected: false,
+        tasks: [
+          {
+            name: "Navigate the Home Page",
+            selected: false,
+            description: "Enim ipsum est minim aute quis voluptate cupidatat voluptate sit.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Navigate_Home_Page/index.html"
+          },
+          {
+            name: "Navigate a Dataview",
+            selected: false,
+            description: "Non amet dolore nulla culpa velit ut ipsum minim nisi.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Navigate_Dataviews/index.html"
+          },
+          {
+            name: "Review Alerts in the Control Center Panel",
+            selected: false,
+            description:
+              "Eu velit fugiat irure nisi enim sunt labore ex minim est eiusmod excepteur.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Review_Alerts_in_Control_Center_Panel/index.html"
+          },
+          {
+            name: "Review Notifications in the Control Center",
+            selected: false,
+            description:
+              "Lorem reprehenderit qui ut eiusmod aliqua duis nisi pariatur culpa sint ea.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Review_Notifications_in_Control_Center/index.html"
+          },
+          {
+            name: "Running Reports",
+            selected: false,
+            description: "Enim elit cupidatat mollit ut.",
+            link:
+              "https://edweb1.kronos.com/education/WFD_UA/Tools_Templates/Captured_Exercises/Published/MTO_Timekeeping_Exercise_Page/Running_Reports/index.html"
+          }
+        ]
       }
     }
   },
