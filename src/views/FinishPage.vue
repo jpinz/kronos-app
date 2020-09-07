@@ -30,7 +30,7 @@ export default {
       console.log("downloading...");
       const loadingComponent = this.$buefy.loading.open();
       this.axios({
-        url: "http://localhost:3001/download", //your url
+        url: "/download",
         method: "POST",
         data: {
           role: this.role,

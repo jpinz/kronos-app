@@ -137,38 +137,13 @@ export default new Vuex.Store({
       state.colorSecondary = c;
     },
     setTasks: (state, payload) => {
-      if (payload.taskGroup == "Timekeeping") {
-        state.taskGroups.Timekeeping.tasks = payload.tasks;
-      } else if (payload.taskGroup == "Scheduling") {
-        state.taskGroups.Scheduling.tasks = payload.tasks;
-      } else if (payload.taskGroup == "HR") {
-        state.taskGroups.HR.tasks = payload.tasks;
-      } else {
-        console.log("Error: Unknown task group " + payload.taskGroup);
-      }
+      state.taskGroups[payload.taskGroup].tasks = payload.tasks;
     },
     selectTaskGroup: (state, payload) => {
-      if (payload.name == "Timekeeping") {
-        state.taskGroups.Timekeeping.selected = payload.selected;
-      } else if (payload.name == "Scheduling") {
-        state.taskGroups.Scheduling.selected = payload.selected;
-      } else if (payload.name == "HR") {
-        state.taskGroups.HR.selected = payload.selected;
-      } else {
-        console.log("Error: Unknown task group " + payload.name);
-      }
+      state.taskGroups[payload.name].selected = payload.selected;
     },
     selectGroupTasks: (state, payload) => {
-      console.log(payload);
-      if (payload.group == "Timekeeping") {
-        state.taskGroups.Timekeeping.tasks[payload.index].selected = payload.selected;
-      } else if (payload.group == "Scheduling") {
-        state.taskGroups.Scheduling.tasks[payload.index].selected = payload.selected;
-      } else if (payload.group == "HR") {
-        state.taskGroups.HR.tasks[payload.index].selected = payload.selected;
-      } else {
-        console.log("Error: Unknown task " + payload.name + " for Task Group: " + payload.group);
-      }
+      state.taskGroups[payload.group].tasks[payload.index].selected = payload.selected;
     },
     rearrangeTasks: (state, payload) => {
       let tasks = state.taskGroups[payload.group].tasks;
